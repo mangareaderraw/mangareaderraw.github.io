@@ -1,8 +1,10 @@
 import { writeFile } from 'node:fs/promises';
 
-const SITE = 'https://mangaatlas.github.io';
-const SUPABASE_URL = 'https://vcrrkyqiunczhpxdcoil.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_IWiCOqUZ7PtPaISAo_5RDw_9uTvyD4z';
+const SITE = (process.env.SITE_URL || 'http://localhost:3000').replace(/\/$/, '');
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_KEY = process.env.SUPABASE_ANON_KEY;
+
+if (!SUPABASE_URL || !SUPABASE_KEY) throw new Error('Set SUPABASE_URL and SUPABASE_ANON_KEY before generating the sitemap.');
 
 async function fetchRows(path) {
   const response = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
@@ -21,14 +23,11 @@ add(`${SITE}/blog.html`);
 add(`${SITE}/japan-blog.html`);
 add(`${SITE}/france-blog.html`);
 
-// Keep sitemap URLs identical to the canonical URLs declared by manga/chapter pages.
 const manga = await fetchRows('manga?select=slug,updated_at&slug=not.is.null&order=slug');
 for (const item of manga) add(`${SITE}/manga/${encodeURIComponent(item.slug)}`, item.updated_at);
 
-// Chapter pages are served by chapter.html with the slug query parameter.
-// Keep sitemap URLs identical to the real public chapter URLs.
 const chapters = await fetchRows('chapters?select=url_slug,created_at,updated_at&url_slug=not.is.null&order=updated_at.desc');
-for (const item of chapters) add(`${SITE}/chapter.html?slug=${encodeURIComponent(item.url_slug)}`, item.updated_at || item.created_at);
+for (const item of chapters) add(`${SITE}/chapter/${encodeURIComponent(item.url_slug)}`, item.updated_at || item.created_at);
 
 const escapeXml = value => String(value)
   .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
