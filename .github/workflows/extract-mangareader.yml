@@ -11,17 +11,12 @@ jobs:
       - uses: actions/checkout@v4
       - name: Extract project into repository root
         run: |
-          rm -rf /tmp/mr
-          mkdir -p /tmp/mr
+          rm -rf /tmp/mr /tmp/mr-project
+          mkdir -p /tmp/mr /tmp/mr-project
           unzip -q -o MangaReader.zip -d /tmp/mr
-          if [ -f /tmp/mr/mangareader-package/MangaReader.zip ]; then
-            rm -rf /tmp/mr/nested
-            mkdir -p /tmp/mr/nested
-            unzip -q -o /tmp/mr/mangareader-package/MangaReader.zip -d /tmp/mr/nested
-            cp -a /tmp/mr/nested/. /tmp/mr/mangareader-package/
-          fi
-          cp -a /tmp/mr/mangareader-package/. ./
-          rm -rf /tmp/mr MangaReader.zip hi .github/workflows/extract-mangareader.yml
+          unzip -q -o /tmp/mr/MangaReader.zip -d /tmp/mr-project
+          cp -a /tmp/mr-project/. ./
+          rm -rf /tmp/mr /tmp/mr-project MangaReader.zip hi .github/workflows/extract-mangareader.yml
       - name: Commit extracted project
         run: |
           git config user.name 'github-actions[bot]'
