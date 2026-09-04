@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://mangareaderraw.github.io/</loc></url>
-  <url><loc>https://mangareaderraw.github.io/japan</loc></url>
   <url><loc>https://mangareaderraw.github.io/japan-blog.html</loc></url>
 
-  <!-- Manga pages -->
-  <url><loc>https://mangareaderraw.github.io/manga/kingdom-raw</loc></url>
-  <url><loc>https://mangareaderraw.github.io/manga/kagurabachi-raw</loc></url>
-  <url><loc>https://mangareaderraw.github.io/manga/hunter-x-hunter-raw</loc></url>
-  <url><loc>https://mangareaderraw.github.io/manga/sakamoto-days-raw</loc></url>
-  <url><loc>https://mangareaderraw.github.io/manga/one-piece-raw</loc></url>
-  <url><loc>https://mangareaderraw.github.io/manga/blue-lock-raw</loc></url>
+  <!-- Real GitHub Pages files: query-string URLs return HTTP 200 -->
+  <url><loc>https://mangareaderraw.github.io/manga.html?slug=kingdom-raw</loc></url>
+  <url><loc>https://mangareaderraw.github.io/manga.html?slug=kagurabachi-raw</loc></url>
+  <url><loc>https://mangareaderraw.github.io/manga.html?slug=hunter-x-hunter-raw</loc></url>
+  <url><loc>https://mangareaderraw.github.io/manga.html?slug=sakamoto-days-raw</loc></url>
+  <url><loc>https://mangareaderraw.github.io/manga.html?slug=one-piece-raw</loc></url>
+  <url><loc>https://mangareaderraw.github.io/manga.html?slug=blue-lock-raw</loc></url>
 
-  <!-- Chapter pages -->
-  <url><loc>https://mangareaderraw.github.io/chapter/kingdom-raw-886</loc></url>
-  <url><loc>https://mangareaderraw.github.io/chapter/kagurabachi-raw-131</loc></url>
-  <url><loc>https://mangareaderraw.github.io/chapter/hunter-x-hunter-raw-420</loc></url>
-  <url><loc>https://mangareaderraw.github.io/chapter/sakamoto-days-raw-274</loc></url>
-  <url><loc>https://mangareaderraw.github.io/chapter/one-piece-raw-1192</loc></url>
-  <url><loc>https://mangareaderraw.github.io/chapter/blue-lock-raw-360</loc></url>
-  <url><loc>https://mangareaderraw.github.io/chapter/blue-lock-raw-359</loc></url>
+  <url><loc>https://mangareaderraw.github.io/chapter.html?slug=kingdom-raw-886</loc></url>
+  <url><loc>https://mangareaderraw.github.io/chapter.html?slug=kagurabachi-raw-131</loc></url>
+  <url><loc>https://mangareaderraw.github.io/chapter.html?slug=hunter-x-hunter-raw-420</loc></url>
+  <url><loc>https://mangareaderraw.github.io/chapter.html?slug=sakamoto-days-raw-274</loc></url>
+  <url><loc>https://mangareaderraw.github.io/chapter.html?slug=one-piece-raw-1192</loc></url>
+  <url><loc>https://mangareaderraw.github.io/chapter.html?slug=blue-lock-raw-360</loc></url>
+  <url><loc>https://mangareaderraw.github.io/chapter.html?slug=blue-lock-raw-359</loc></url>
 </urlset>
