@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://YOUR-GITHUB-USERNAME.github.io/</loc></url>
-  <url><loc>https://YOUR-GITHUB-USERNAME.github.io/manga.html</loc></url>
-  <url><loc>https://YOUR-GITHUB-USERNAME.github.io/country.html</loc></url>
-  <url><loc>https://YOUR-GITHUB-USERNAME.github.io/japan-blog.html</loc></url>
-  <url><loc>https://YOUR-GITHUB-USERNAME.github.io/france-blog.html</loc></url>
+  <url><loc>/</loc></url>
+  <url><loc>/japan</loc></url>
+  <url><loc>/usa</loc></url>
+  <url><loc>/france</loc></url>
+  <url><loc>/brazil</loc></url>
+  <url><loc>/blog.html</loc></url>
+  <url><loc>/japan-blog.html</loc></url>
+  <url><loc>/france-blog.html</loc></url>
 </urlset>
