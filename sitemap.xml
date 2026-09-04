@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>/</loc></url>
-  <url><loc>/japan</loc></url>
-  <url><loc>/usa</loc></url>
-  <url><loc>/france</loc></url>
-  <url><loc>/brazil</loc></url>
-  <url><loc>/blog.html</loc></url>
-  <url><loc>/japan-blog.html</loc></url>
-  <url><loc>/france-blog.html</loc></url>
+  <url><loc>https://mangareaderraw.github.io/</loc></url>
+  <url><loc>https://mangareaderraw.github.io/japan</loc></url>
+  <url><loc>https://mangareaderraw.github.io/usa</loc></url>
+  <url><loc>https://mangareaderraw.github.io/france</loc></url>
+  <url><loc>https://mangareaderraw.github.io/brazil</loc></url>
+  <url><loc>https://mangareaderraw.github.io/blog.html</loc></url>
+  <url><loc>https://mangareaderraw.github.io/japan-blog.html</loc></url>
+  <url><loc>https://mangareaderraw.github.io/france-blog.html</loc></url>
 </urlset>
