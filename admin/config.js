@@ -1,7 +1,7 @@
 // Admin browser configuration.
-// Fill these values with the same Supabase project URL and anon/publishable key used by /config.js.
+// Uses the same Supabase project and publishable/anon key as the public site.
 // Never put a Supabase service_role/secret key here.
 window.MANGAREADER_CONFIG = {
-  SUPABASE_URL: '',
-  SUPABASE_ANON_KEY: ''
+  SUPABASE_URL: 'https://wtythbvwxlwnwrixjior.supabase.co',
+  SUPABASE_ANON_KEY: 'sb_publishable__myEmfpQvqeBp5rve9WJzA_ptluHY_S'
 };
