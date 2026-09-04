@@ -1,1 +1,36 @@
-<!doctype html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="index,follow,max-image-preview:large"><meta name="description" content="MangaReader chapter page with manga chapter information and uploaded pages."><link rel="preconnect" href="https://vcrrkyqiunczhpxdcoil.supabase.co"><link rel="preconnect" href="https://vcrrkyqiunczhpxdcoil.supabase.co" crossorigin><link id="canonical" rel="canonical" href="/chapter.html"><title>Chapter | MangaReader</title><script async src="https://www.googletagmanager.com/gtag/js?id=G-50N8R6DVZH"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-50N8R6DVZH',{send_page_view:false});</script><script src="/config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>body{margin:0;background:#07080b;color:#f5f5f7;font-family:Inter,system-ui,sans-serif}.bar{position:sticky;top:0;z-index:5;background:#0c0e13ee;backdrop-filter:blur(10px);border-bottom:1px solid #222733;padding:14px 5%;display:flex;justify-content:space-between;align-items:center}.bar a{color:#b7bdc9;text-decoration:none}.title{font-weight:800}.views{color:#8b92a1;font-size:12px;margin-left:12px}.reader{max-width:1000px;margin:auto}.page{display:block;width:100%;height:auto;margin:0 auto;background:#111}.ad-slot iframe{display:block;border:0;max-width:100%;overflow:hidden}.ad-90{min-height:90px}.ad-50{min-height:50px}.ad-250{min-height:250px}.ad-container{min-height:250px}.ad-profit{min-height:90px}.empty{text-align:center;padding:100px 20px;color:#8b92a1}.error{color:#ff8c9b;text-align:center;padding:100px 20px}@media(max-width:600px){.ad-90{min-height:50px}.ad-50{min-height:50px}.ad-250{min-height:250px}}</style></head><body><header class="bar"><a id="back" href="/">← MangaReader</a><span id="title" class="title">Chapter</span></header><main id="reader" class="reader"><div class="empty">Loading chapter...</div></main><script>const sb=supabase.createClient(window.MANGAREADER_CONFIG.SUPABASE_URL,window.MANGAREADER_CONFIG.SUPABASE_ANON_KEY);const esc=v=>String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;');function normalizePage(p){if(typeof p==='object'&&p)return p;try{const x=JSON.parse(p);return typeof x==='object'&&x?x:{url:String(p)};}catch{return {url:String(p)}}}function decodeSlug(value){let s=String(value||'');for(let i=0;i<3&&/%[0-9A-Fa-f]{2}/.test(s);i++){try{const d=decodeURIComponent(s);if(d===s)break;s=d}catch{break}}return s}function addAds(){}).catch(()=>{})}init();</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="description" content="MangaReader chapter page with manga chapter information and uploaded pages.">
+<link id="canonical" rel="canonical" href="/chapter.html"><title>Chapter | MangaReader</title>
+<script src="/config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>*{box-sizing:border-box}body{margin:0;background:#07080b;color:#f5f5f7;font-family:Inter,system-ui,sans-serif}.bar{position:sticky;top:0;z-index:5;background:#0c0e13ee;backdrop-filter:blur(10px);border-bottom:1px solid #222733;padding:14px 5%;display:flex;justify-content:space-between;align-items:center;gap:20px}.bar a{color:#b7bdc9;text-decoration:none}.title{font-weight:800}.views{color:#8b92a1;font-size:12px}.reader{max-width:1000px;margin:auto}.page{display:block;width:100%;height:auto;margin:0 auto;background:#111}.empty,.error{text-align:center;padding:100px 20px;color:#8b92a1}.error{color:#ff8c9b}.chapter-head{padding:24px 5%;text-align:center}.chapter-head h1{margin:0 0 8px;font-size:clamp(24px,4vw,42px)}.chapter-head p{margin:0;color:#8b92a1}.pages{display:flex;flex-direction:column;align-items:center}.pages img{max-width:100%;height:auto;display:block;background:#111}.back{color:#b7bdc9}.notice{padding:18px 5%;color:#9ea5b3;text-align:center}</style>
+</head><body><header class="bar"><a class="back" id="back" href="/">← MangaReader</a><span class="title" id="title">Chapter</span><span class="views" id="views"></span></header><main id="reader"><div class="empty">Loading chapter...</div></main>
+<script>
+const cfg=window.MANGAREADER_CONFIG||{};
+const reader=document.getElementById('reader');
+const sb=supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY);
+const esc=v=>String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+const decodeSlug=value=>{let s=String(value||'');for(let i=0;i<3;i++){try{const d=decodeURIComponent(s);if(d===s)break;s=d}catch{break}}return s};
+const normalizePage=p=>{if(p&&typeof p==='object')return p;try{const x=JSON.parse(p);return x&&typeof x==='object'?x:{url:String(p)} }catch{return {url:String(p)}}};
+async function init(){
+  if(!cfg.SUPABASE_URL||!cfg.SUPABASE_ANON_KEY){reader.innerHTML='<div class="error">Site configuration is incomplete. Connect Supabase first.</div>';return}
+  const path=location.pathname.replace(/\/+$/,'');
+  let slug=new URLSearchParams(location.search).get('slug')||'';
+  if(!slug){const m=path.match(/^\/chapter\/(.+)$/);if(m)slug=decodeSlug(m[1]);}
+  if(!slug){reader.innerHTML='<div class="error">Chapter not found.</div>';return}
+  const {data,error}=await sb.from('chapters').select('id,chapter_number,title,url_slug,pages,view_count,manga(id,title,slug,cover_url)').eq('url_slug',slug).single();
+  if(error||!data){reader.innerHTML='<div class="error">Chapter not found.</div>';return}
+  const manga=data.manga||{}; const pageRows=(data.pages||[]).map(normalizePage).filter(p=>p.url);
+  document.title=`${manga.title||'Manga'} — Chapter ${data.chapter_number} | MangaReader`;
+  document.getElementById('canonical').href=`/chapter/${encodeURIComponent(data.url_slug)}`;
+  document.getElementById('title').textContent=`${manga.title||'Manga'} · Chapter ${data.chapter_number}`;
+  document.getElementById('views').textContent=`👁 ${Number(data.view_count||0).toLocaleString()} views`;
+  document.getElementById('back').href=manga.slug?`/manga/${encodeURIComponent(manga.slug)}`:'/';
+  const pages=pageRows.map((p,i)=>`<img class="page" src="${esc(p.url)}" alt="${esc(p.alt||`${manga.title||'Manga'} Chapter ${data.chapter_number} page ${i+1}`)}" loading="${i?'lazy':'eager'}" decoding="async">`).join('');
+  reader.innerHTML=`<section class="chapter-head"><h1>${esc(manga.title||'Manga')} — Chapter ${esc(data.chapter_number)}${data.title?` · ${esc(data.title)}`:''}</h1><p>${pageRows.length} page${pageRows.length===1?'':'s'}</p></section>${pages?`<div class="pages">${pages}</div>`:'<div class="empty">No chapter pages have been uploaded yet.</div>'}<div class="notice">MangaReader is a manga discovery platform. Please use official/legal sources where applicable.</div>`;
+}
+init();
+</script></body></html>
