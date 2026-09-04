@@ -1,0 +1,29 @@
+name: Extract MangaReader ZIP
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract project into repository root
+        run: |
+          rm -rf mangareader-package
+          unzip -q MangaReader.zip -d .
+          if [ -f mangareader-package/MangaReader.zip ]; then
+            unzip -q mangareader-package/MangaReader.zip -d mangareader-package/nested
+            cp -a mangareader-package/nested/. mangareader-package/
+            rm -rf mangareader-package/nested
+          fi
+          cp -a mangareader-package/. ./
+          rm -rf mangareader-package MangaReader.zip hi .github/workflows/extract-mangareader.yml
+      - name: Commit extracted project
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Extract MangaReader project into repository' || exit 0
+          git push
