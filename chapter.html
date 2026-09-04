@@ -16,6 +16,21 @@ const sb=supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY);
 const esc=v=>String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;').replace(/'/g,'&#039;');
 const decodeSlug=value=>{let s=String(value||'');for(let i=0;i<3;i++){try{const d=decodeURIComponent(s);if(d===s)break;s=d}catch{break}}return s};
 const normalizePage=p=>{if(p&&typeof p==='object')return p;try{const x=JSON.parse(p);return x&&typeof x==='object'?x:{url:String(p)}}catch{return {url:String(p)}}};
+const VIEW_COOLDOWN_MS=30*60*1000;
+function viewKey(chapterId){return `mangareader:view:${chapterId}`}
+async function registerView(chapterId,currentCount){
+  const key=viewKey(chapterId);
+  let last=0;
+  try{last=Number(localStorage.getItem(key)||0)}catch{}
+  if(last && Date.now()-last<VIEW_COOLDOWN_MS) return currentCount;
+  try{
+    const {data,error}=await sb.rpc('increment_chapter_view',{p_chapter_id:chapterId});
+    if(error) throw error;
+    const next=Array.isArray(data)?data[0]:data;
+    if(next!==null&&next!==undefined){try{localStorage.setItem(key,String(Date.now()))}catch{};return Number(next)}
+  }catch(e){console.warn('View count update failed',e)}
+  return currentCount;
+}
 async function init(){
   if(!cfg.SUPABASE_URL||!cfg.SUPABASE_ANON_KEY){reader.innerHTML='<div class="error">Site configuration is incomplete. Connect Supabase first.</div>';return}
   const path=location.pathname.replace(/\/+$/,'');
@@ -32,6 +47,8 @@ async function init(){
   document.getElementById('back').href=manga.slug?`/manga.html?slug=${encodeURIComponent(manga.slug)}`:'/';
   const pages=pageRows.map((p,i)=>`<img class="page" src="${esc(p.url)}" alt="${esc(p.alt||`${manga.title||'Manga'} Chapter ${data.chapter_number} page ${i+1}`)}" loading="${i?'lazy':'eager'}" decoding="async">`).join('');
   reader.innerHTML=`<section class="chapter-head"><h1>${esc(manga.title||'Manga')} — Chapter ${esc(data.chapter_number)}${data.title?` · ${esc(data.title)}`:''}</h1><p>${pageRows.length} page${pageRows.length===1?'':'s'}</p></section>${pages?`<div class="pages">${pages}</div>`:'<div class="empty">No chapter pages have been uploaded yet.</div>'}<div class="notice">MangaReader is a manga discovery platform. Please use official/legal sources where applicable.</div>`;
+  const newCount=await registerView(data.id,Number(data.view_count||0));
+  document.getElementById('views').textContent=`👁 ${newCount.toLocaleString()} views`;
 }
 init();
 </script></body></html>
