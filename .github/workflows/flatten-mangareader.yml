@@ -1,0 +1,23 @@
+name: Flatten MangaReader package
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  flatten:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Move project files to root
+        run: |
+          test -d mangareader-package
+          cp -a mangareader-package/. ./
+          rm -rf mangareader-package .github/workflows/flatten-mangareader.yml
+      - name: Commit flattened project
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Flatten MangaReader project to repository root' || exit 0
+          git push
