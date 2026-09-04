@@ -5,12 +5,17 @@ create table if not exists public.manga (
   native_title text, author text, artist text, description text, cover_url text,
   country text not null default 'JP', language text not null default 'ja', genres text[] default '{}',
   status text not null default 'ongoing', release_date date, official_url text,
-  featured boolean not null default false, created_at timestamptz not null default now(), updated_at timestamptz not null default now()
+  featured boolean not null default false,
+  keywords text[] default '{}', publisher text, magazine text, related_media jsonb not null default '{}'::jsonb,
+  bot_enabled boolean not null default false, source_urls text[] default '{}', bot_keywords text[] default '{}',
+  created_at timestamptz not null default now(), updated_at timestamptz not null default now()
 );
 create table if not exists public.chapters (
   id uuid primary key default gen_random_uuid(), manga_id uuid not null references public.manga(id) on delete cascade,
   chapter_number numeric(10,2) not null, title text, url text, cover_url text, release_date date,
-  language text not null default 'ja', created_at timestamptz not null default now(), updated_at timestamptz not null default now(),
+  language text not null default 'ja',
+  url_slug text unique, pages jsonb not null default '[]'::jsonb, view_count bigint not null default 0, feature_image_url text,
+  created_at timestamptz not null default now(), updated_at timestamptz not null default now(),
   unique(manga_id, chapter_number, language)
 );
 create table if not exists public.news (
@@ -26,6 +31,45 @@ create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   role text not null default 'editor' check (role in ('admin','editor')), created_at timestamptz not null default now()
 );
+
+-- Compatibility columns for existing installations.
+alter table public.manga add column if not exists keywords text[] default '{}';
+alter table public.manga add column if not exists publisher text;
+alter table public.manga add column if not exists magazine text;
+alter table public.manga add column if not exists related_media jsonb not null default '{}'::jsonb;
+alter table public.manga add column if not exists bot_enabled boolean not null default false;
+alter table public.manga add column if not exists source_urls text[] default '{}';
+alter table public.manga add column if not exists bot_keywords text[] default '{}';
+alter table public.chapters add column if not exists url_slug text;
+alter table public.chapters add column if not exists pages jsonb not null default '[]'::jsonb;
+alter table public.chapters add column if not exists view_count bigint not null default 0;
+alter table public.chapters add column if not exists feature_image_url text;
+create unique index if not exists chapters_url_slug_unique on public.chapters(url_slug) where url_slug is not null;
+
+create table if not exists public.bot_candidates (
+  id uuid primary key default gen_random_uuid(), manga_id uuid not null references public.manga(id) on delete cascade,
+  chapter_number numeric(10,2) not null, title text, source_name text, source_url text,
+  status text not null default 'new', found_at timestamptz not null default now(),
+  last_published numeric(10,2), published_chapter_id uuid references public.chapters(id) on delete set null,
+  created_at timestamptz not null default now(), updated_at timestamptz not null default now()
+);
+alter table public.bot_candidates enable row level security;
+drop policy if exists "Authenticated can read bot candidates" on public.bot_candidates;
+create policy "Authenticated can read bot candidates" on public.bot_candidates for select to authenticated using (true);
+drop policy if exists "Authenticated can update bot candidates" on public.bot_candidates;
+create policy "Authenticated can update bot candidates" on public.bot_candidates for update to authenticated using (true) with check (true);
+drop policy if exists "Authenticated can insert bot candidates" on public.bot_candidates;
+create policy "Authenticated can insert bot candidates" on public.bot_candidates for insert to authenticated with check (true);
+
+insert into storage.buckets (id, name, public) values ('chapter-pages','chapter-pages',true) on conflict (id) do nothing;
+drop policy if exists "Public can view chapter pages" on storage.objects;
+create policy "Public can view chapter pages" on storage.objects for select using (bucket_id='chapter-pages');
+drop policy if exists "Authenticated can upload chapter pages" on storage.objects;
+create policy "Authenticated can upload chapter pages" on storage.objects for insert to authenticated with check (bucket_id='chapter-pages');
+drop policy if exists "Authenticated can update chapter pages" on storage.objects;
+create policy "Authenticated can update chapter pages" on storage.objects for update to authenticated using (bucket_id='chapter-pages');
+drop policy if exists "Authenticated can delete chapter pages" on storage.objects;
+create policy "Authenticated can delete chapter pages" on storage.objects for delete to authenticated using (bucket_id='chapter-pages');
 
 alter table public.manga enable row level security;
 alter table public.chapters enable row level security;
