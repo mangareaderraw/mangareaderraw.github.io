@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="index,follow">
+<meta name="description" content="MangaReader — discover manga, latest chapters and manga releases from Japan, the United States, France and Brazil.">
+<link rel="canonical" href="/">
+<title>MangaReader — Global Manga Hub | Latest Manga Chapters</title>
+<script src="/config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#08090d;color:#f5f5f7;font-family:Inter,system-ui,sans-serif}a{text-decoration:none;color:inherit}.nav{height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 5%;border-bottom:1px solid #20222b;background:#0b0c11}.brand{font-size:24px;font-weight:800}.brand span{color:#183b73}.navlinks{display:flex;gap:22px;align-items:center;color:#9ea2b0;font-size:14px;flex-wrap:wrap}.hero{padding:68px 5%;background:radial-gradient(circle at 80% 20%,#142d52,#111018 40%,#08090d 75%)}.hero h1{font-size:clamp(42px,6vw,72px);margin:14px 0}.hero p{max-width:650px;color:#b8bbc6;font-size:17px;line-height:1.6}.section{max-width:1380px;margin:auto;padding:24px 5%}.country-row{border-bottom:1px solid #22252e;padding:30px 0}.country-head{display:flex;align-items:center;gap:14px;margin-bottom:15px}.country-title{font-size:22px;font-weight:800}.country-line{height:1px;background:#22252e;flex:1}.country-count{color:#777b89;font-size:12px}.latest-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.latest-item{display:grid;grid-template-columns:70px 1fr;gap:12px;padding:10px;border:1px solid #242732;border-radius:11px;background:#101118;min-height:114px}.latest-item img{width:70px;height:92px;object-fit:cover;border-radius:7px}.latest-item p{margin:6px 0;color:#9296a5;font-size:12px}.chapter-number{color:#b8bbc6}.pagination{display:flex;justify-content:center;align-items:center;gap:12px;margin-top:20px}.page-btn{border:1px solid #303340;background:#101118;color:#f5f5f7;border-radius:8px;padding:9px 16px;cursor:pointer;font:inherit}.page-btn:hover:not(:disabled){background:#171a22}.page-btn:disabled{opacity:.35;cursor:not-allowed}.page-info{color:#9296a5;font-size:13px;min-width:90px;text-align:center}.empty{padding:20px;border:1px dashed #303340;border-radius:12px;color:#9296a5}.loading{padding:20px;color:#9296a5}.footer{border-top:1px solid #20222b;padding:25px 5%;color:#777b89;font-size:12px;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}@media(max-width:900px){.latest-grid{grid-template-columns:1fr 1fr}}@media(max-width:560px){.nav{height:auto;min-height:68px;padding:14px 5%;gap:12px;align-items:flex-start}.navlinks{gap:10px}.hero{padding:45px 5%}.latest-grid{grid-template-columns:1fr}.latest-item{grid-template-columns:70px 1fr}}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a class="brand" href="/">Manga<span>Atlas</span></a>
+<div class="navlinks">
+<a href="#japan">🇯🇵 Japan</a><a href="#usa">🇺🇸 USA</a><a href="#france">🇫🇷 France</a><a href="#brazil">🇧🇷 Brazil</a><a href="/admin/">Admin</a>
+</div>
+</nav>
+<header class="hero">
+<h1>Discover manga beyond borders.</h1>
+<p>MangaReader brings together manga discovery, latest chapters and releases from Japan, the United States, France and Brazil.</p>
+</header>
+<main id="countrySections" class="section">
+<div id="japan" class="country-row"><div class="country-head"><div class="country-title">🇯🇵 Japan</div><div class="country-line"></div><div class="country-count">Latest 20</div></div><div id="JP-grid" class="latest-grid"><div class="loading">Loading Japan chapters...</div></div><div id="JP-pagination" class="pagination"></div></div>
+<div id="usa" class="country-row"><div class="country-head"><div class="country-title">🇺🇸 United States</div><div class="country-line"></div><div class="country-count">Latest 20</div></div><div id="US-grid" class="latest-grid"><div class="loading">Loading USA chapters...</div></div><div id="US-pagination" class="pagination"></div></div>
+<div id="france" class="country-row"><div class="country-head"><div class="country-title">🇫🇷 France</div><div class="country-line"></div><div class="country-count">Latest 20</div></div><div id="FR-grid" class="latest-grid"><div class="loading">Loading France chapters...</div></div><div id="FR-pagination" class="pagination"></div></div>
+<div id="brazil" class="country-row"><div class="country-head"><div class="country-title">🇧🇷 Brazil</div><div class="country-line"></div><div class="country-count">Latest 20</div></div><div id="BR-grid" class="latest-grid"><div class="loading">Loading Brazil chapters...</div></div><div id="BR-pagination" class="pagination"></div></div>
+</main>
+<footer class="footer"><span>© 2026 MangaReader</span><span><a href="/japan-blog.html">Japan Blog</a> · <a href="/france-blog.html">France Blog</a> · <a href="/sitemap.xml">Sitemap</a></span></footer>
+<script>
+const sb=supabase.createClient(window.MANGAREADER_CONFIG.SUPABASE_URL,window.MANGAREADER_CONFIG.SUPABASE_ANON_KEY);
+const esc=v=>String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;');
+const PAGE_SIZE=20;
+const countries={
+ JP:{name:'Japan',grid:'JP-grid',pagination:'JP-pagination'},
+ US:{name:'United States',grid:'US-grid',pagination:'US-pagination'},
+ FR:{name:'France',grid:'FR-grid',pagination:'FR-pagination'},
+ BR:{name:'Brazil',grid:'BR-grid',pagination:'BR-pagination'}
+};
+const state={JP:1,US:1,FR:1,BR:1};
+async function loadCountry(country,page=1){
+ state[country]=page;
+ const cfg=countries[country],grid=document.getElementById(cfg.grid),pager=document.getElementById(cfg.pagination);
+ grid.innerHTML='<div class="loading">Loading latest '+cfg.name+' chapters...</div>';
+ pager.innerHTML='';
+ const from=(page-1)*PAGE_SIZE,to=from+PAGE_SIZE-1;
+ const {data,error,count}=await sb.from('chapters').select('chapter_number,url_slug,created_at,view_count,manga!inner(title,cover_url,country)',{count:'exact'}).eq('manga.country',country).order('created_at',{ascending:false}).range(from,to);
+ if(error||!data?.length){grid.innerHTML='<div class="empty">No chapters published yet.</div>';return}
+ grid.innerHTML=data.map(c=>`<a class="latest-item" href="/chapter/${encodeURIComponent(c.url_slug)}"><img src="${esc(c.manga?.cover_url||'https://placehold.co/300x400')}" alt="${esc(c.manga?.title||'Manga')}" loading="lazy" decoding="async"><div><strong>${esc(c.manga?.title||'')} <span class="chapter-number">· Chapter ${esc(c.chapter_number)}</span></strong><p>${new Date(c.created_at).toLocaleDateString()} · 👁 ${Number(c.view_count||0).toLocaleString()}</p></div></a>`).join('');
+ const totalPages=Math.max(1,Math.ceil((count||0)/PAGE_SIZE));
+ if(totalPages>1){
+   pager.innerHTML=`<button class="page-btn" ${page<=1?'disabled':''} onclick="loadCountry('${country}',${page-1})">← Previous</button><span class="page-info">Page ${page} / ${totalPages}</span><button class="page-btn" ${page>=totalPages?'disabled':''} onclick="loadCountry('${country}',${page+1})">Next →</button>`;
+ }
+}
+Object.keys(countries).forEach(country=>loadCountry(country,1));
+</script>
+</body>
+</html>
